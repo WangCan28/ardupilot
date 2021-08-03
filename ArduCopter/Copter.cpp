@@ -445,7 +445,6 @@ void Copter::one_hz_loop()
         ahrs.update_orientation();
 
         update_using_interlock();
-
         // check the user hasn't updated the frame class or type
         motors->set_frame_class_and_type((AP_Motors::motor_frame_class)g2.frame_class.get(), (AP_Motors::motor_frame_type)g.frame_type.get());
 
@@ -466,6 +465,10 @@ void Copter::one_hz_loop()
 #endif
 
     AP_Notify::flags.flying = !ap.land_complete;
+
+    gcs().send_text(MAV_SEVERITY_CRITICAL,
+                    "Current altitude: %.1fm",
+                     copter.flightmode->get_alt_above_ground_cm() / 100.0f);
 }
 
 // called at 50hz
